@@ -1,13 +1,11 @@
 package com.conexa.api.controller;
 
-import com.conexa.api.domain.autenticacao.AutenticacaoDetails;
 import com.conexa.api.domain.autenticacao.DadosAutenticacao;
+import com.conexa.api.domain.usuario.Usuario;
 import com.conexa.api.infra.security.DadosTokenJWT;
 import com.conexa.api.infra.security.TokenService;
 import jakarta.validation.Valid;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,7 +33,7 @@ public class AutenticacaoController {
 
         var authentication = manager.authenticate(authenticationToken);
 
-        var tokenJWT = tokenService.gerarToken((AutenticacaoDetails) authentication.getPrincipal());
+        var tokenJWT = tokenService.gerarToken((Usuario) authentication.getPrincipal());
 
         return ResponseEntity.ok(new DadosTokenJWT(tokenJWT));
     }

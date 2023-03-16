@@ -2,6 +2,7 @@ package com.conexa.api.controller;
 
 import com.conexa.api.domain.medico.DadosCadastroMedico;
 import com.conexa.api.domain.medico.DadosDetalhamentoMedico;
+import com.conexa.api.domain.medico.Medico;
 import com.conexa.api.domain.medico.MedicoService;
 import com.conexa.api.infra.util.CpfUtil;
 import jakarta.validation.Valid;
@@ -22,20 +23,13 @@ public class SignupController {
     @Transactional
     public ResponseEntity signup(@RequestBody @Valid DadosCadastroMedico dados, UriComponentsBuilder uriBuilder) {
 
-        if (!dados.senha().equals(dados.confirmacaoSenha())) {
-            return ResponseEntity.badRequest().body( "As senhas não são iguais!");
-        }
-
-        if (!CpfUtil.validarCpf(dados.cpf().replaceAll("[^0-9]+", ""))) {
-            return ResponseEntity.badRequest().body("CPF incorreto!");
-        }
-
         try {
-            var medico =  medicoService.save(dados);
+            var medico = new Medico(dados);
+            medicoService.save(medico);
             var uri = uriBuilder.path("/medicos/{id}").buildAndExpand(medico.getId()).toUri();
             return ResponseEntity.created(uri).body(new DadosDetalhamentoMedico(medico));
 
-        } catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
 

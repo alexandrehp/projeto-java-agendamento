@@ -21,10 +21,7 @@ public class AgendamentoService {
 
     public Agendamento save(DadosCadastroAgendamento dados, Medico medico) {
         Agendamento agendamento = new Agendamento();
-        agendamento.setDataHora(LocalDate.parse(dados.dataHora(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        agendamento.setNome(dados.paciente().nome());
-        agendamento.setCpf(dados.paciente().cpf());
-        agendamento.setMedico(medico);
+
 
         return agendamentoRepository.save(agendamento);
     }

@@ -1,7 +1,10 @@
-package com.conexa.api.domain.autenticacao;
+package com.conexa.api.domain.usuario;
 
-
-import com.conexa.api.domain.medico.Medico;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,17 +12,19 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
-public class AutenticacaoDetails implements UserDetails {
+@Table(name = "usuarios")
+@Entity(name = "Usuario")
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
+public class Usuario implements UserDetails {
 
-    private final Medico medico;
-
-    public AutenticacaoDetails(Medico medico) {
-        this.medico = medico;
-    }
-
-    public Medico getMedico() {
-        return medico;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String login;
+    private String senha;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -28,12 +33,12 @@ public class AutenticacaoDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return medico.getSenha();
+        return senha;
     }
 
     @Override
     public String getUsername() {
-        return medico.getEmail();
+        return login;
     }
 
     @Override
@@ -55,6 +60,4 @@ public class AutenticacaoDetails implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
 }

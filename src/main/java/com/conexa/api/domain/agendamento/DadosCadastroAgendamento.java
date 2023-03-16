@@ -1,15 +1,21 @@
 package com.conexa.api.domain.agendamento;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import com.conexa.api.domain.medico.Especialidade;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public record DadosCadastroAgendamento(
 
-        @NotBlank
-        String dataHora,
+        Long idMedico,
 
-        @NotNull @Valid Paciente paciente      ) {
+        @NotNull
+        Long idPaciente,
+
+        @NotNull
+        @Future
+        LocalDateTime data,
+
+        Especialidade especialidade   ) {
 }

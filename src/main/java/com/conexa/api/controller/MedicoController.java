@@ -20,15 +20,8 @@ public class MedicoController {
     @Transactional
     public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroMedico dados, UriComponentsBuilder uriBuilder) {
 
-        if (!dados.senha().equals(dados.confirmacaoSenha())) {
-            return ResponseEntity.badRequest().body( "As senhas não são iguais!");
-        }
-
-        if (!CpfUtil.validarCpf(dados.cpf())) {
-            return ResponseEntity.badRequest().body("CPF incorreto!");
-        }
-
-        var medico =  medicoService.save(dados);
+        var medico = new Medico(dados);
+        medicoService.save(medico);
 
         var uri = uriBuilder.path("/medicos/{id}").buildAndExpand(medico.getId()).toUri();
 

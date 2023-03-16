@@ -47,14 +47,6 @@ public class AgendamentoController {
             return ResponseEntity.badRequest().body("Token JWT inválido ou expirado.");
         }
 
-        LocalDate dataHoje = LocalDate.now();
-        LocalDate dataAgendamento = LocalDate.parse(dados.dataHora(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-        boolean isBefore = dataAgendamento.isBefore(dataHoje);
-
-        if (isBefore){
-            return ResponseEntity.badRequest().body("Só é possível criar agendamentos no futuro");
-        }
-
         var subject = tokenService.getSubject(tokenJWT);
         Medico medicoSubject = medicoService.findByEmail(subject);
 
