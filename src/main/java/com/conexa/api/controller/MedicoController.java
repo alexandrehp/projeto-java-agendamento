@@ -1,9 +1,11 @@
 package com.conexa.api.controller;
 
 import com.conexa.api.domain.medico.*;
-import com.conexa.api.infra.util.CpfUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +16,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 public class MedicoController {
 
     @Autowired
-    private MedicoService medicoService;
+    private MedicoRepository medicoService;
 
     @PostMapping
     @Transactional
@@ -27,6 +29,30 @@ public class MedicoController {
 
         return ResponseEntity.created(uri).body(new DadosDetalhamentoMedico(medico));
 
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<DadosListagemMedico>> listar(@PageableDefault(size = 10, sort = {"nome"}) Pageable paginacao) {
+        var page = medicoService.findAllByAtivoTrue(paginacao).map(DadosListagemMedico::new);
+        return ResponseEntity.ok(page);
+    }
+
+    @PutMapping
+    @Transactional
+    public ResponseEntity atualizar(@RequestBody @Valid DadosAtualizacaoMedico dados) {
+        var medico = medicoService.getReferenceById(dados.id());
+        medico.atualizarInformacoes(dados);
+
+        return ResponseEntity.ok(new DadosDetalhamentoMedico(medico));
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity excluir(@PathVariable Long id) {
+        var medico = medicoService.getReferenceById(id);
+        medico.excluir();
+
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}")

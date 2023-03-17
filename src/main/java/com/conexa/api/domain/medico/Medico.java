@@ -7,14 +7,12 @@ import lombok.*;
 @Table(name = "medicos")
 @Entity(name = "Medico")
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Medico {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nome;
     private String email;
@@ -57,5 +55,4 @@ public class Medico {
     public void excluir() {
         this.ativo = false;
     }
-
 }
